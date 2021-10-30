@@ -22,7 +22,8 @@ async function run() {
         await client.connect();
         const database = client.db('traveler')
         const packagesCollection = database.collection('packages');
-        const bookingCollection = database.collection('booking')
+        const bookingCollection = database.collection('booking');
+        const activitiesCollection = database.collection('activities');
 
 
         // GET all package 
@@ -30,6 +31,21 @@ async function run() {
             const cursor = packagesCollection.find({});
             const packages = await cursor.toArray();
             res.send(packages);
+        })
+        // GET all Activities 
+        app.get('/activities', async (req, res) => {
+            const cursor = activitiesCollection.find({});
+            const activities = await cursor.toArray();
+            res.send(activities);
+        })
+
+        // delete 
+
+        app.delete('/packages/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await packagesCollection.deleteOne(query);
+            res.send(result);
         })
 
         // GET single package 
@@ -41,14 +57,27 @@ async function run() {
             res.json(package);
         })
 
-        // add booking api 
+
+
+        // add booking api clone
         app.post('/booking', async (req, res) => {
             const booked = req.body;
             const result = await bookingCollection.insertOne(booked)
-            res.json(result)
+            res.json(result);
         })
 
-        // POST addpackage
+        // GET All My booking
+
+        app.get('/booking', async (req, res) => {
+            const result = await bookingCollection.find({}).toArray();
+            res.send(result)
+            console.log(result)
+        })
+
+
+
+
+        // POST add package
 
         app.post('/addPackage', async (req, res) => {
             const package = req.body;
