@@ -83,12 +83,28 @@ async function run() {
         });
 
         // get my booking 
-        app.get('/myBookings/:id', async (req, res) => {
+        app.get('/booking/:email', async (req, res) => {
+
+            const result = await bookingCollection.find({
+                email: req.params.email,
+            }).toArray();
+            res.send(result);
+
+        });
+
+        //update status
+        app.put("/manageAllBooking/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const result = await bookingCollection.findOne(query);
+            const option = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: "Approved"
+                }
+            }
+            const result = await bookingCollection.updateOne(query, updateDoc, option)
             res.send(result);
-        })
+        });
 
         // Delete user order 
 
