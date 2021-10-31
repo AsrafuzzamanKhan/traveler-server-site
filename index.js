@@ -66,8 +66,6 @@ async function run() {
             res.json(package);
         })
 
-
-
         // add booking api 
         app.post('/booking', async (req, res) => {
             const booked = req.body;
@@ -82,9 +80,8 @@ async function run() {
             res.send(result)
         });
 
-        // get my booking 
+        // get my all booking 
         app.get('/booking/:email', async (req, res) => {
-
             const result = await bookingCollection.find({
                 email: req.params.email,
             }).toArray();
