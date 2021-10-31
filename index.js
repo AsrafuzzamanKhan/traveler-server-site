@@ -31,7 +31,16 @@ async function run() {
             const cursor = packagesCollection.find({});
             const packages = await cursor.toArray();
             res.send(packages);
-        })
+        });
+
+        // POST add package
+        app.post('/addPackage', async (req, res) => {
+            const package = req.body;
+            const result = await packagesCollection.insertOne(package);
+            res.json(result);
+
+        });
+
         // GET all Activities 
         app.get('/activities', async (req, res) => {
             const cursor = activitiesCollection.find({});
@@ -39,14 +48,14 @@ async function run() {
             res.send(activities);
         })
 
-        // delete 
+        // delete package
 
         app.delete('/packages/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await packagesCollection.deleteOne(query);
             res.send(result);
-        })
+        });
 
         // GET single package 
 
@@ -59,32 +68,37 @@ async function run() {
 
 
 
-        // add booking api clone
+        // add booking api 
         app.post('/booking', async (req, res) => {
             const booked = req.body;
             const result = await bookingCollection.insertOne(booked)
             res.json(result);
         })
 
-        // GET All My booking
+        //get All user booking api
 
         app.get('/booking', async (req, res) => {
             const result = await bookingCollection.find({}).toArray();
             res.send(result)
-            console.log(result)
+        });
+
+        // get my booking 
+        app.get('/myBookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.findOne(query);
+            res.send(result);
         })
 
+        // Delete user order 
 
-
-
-        // POST add package
-
-        app.post('/addPackage', async (req, res) => {
-            const package = req.body;
-            const result = await packagesCollection.insertOne(package);
-            res.json(result);
-
+        app.delete('/manageAllBooking/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result)
         })
+
     }
     finally {
         // await client.close(); 
