@@ -129,5 +129,5 @@ app.get('/', (req, res) => {
 
 // listen port
 app.listen(port, () => {
-  console.log('Traveler ', port);
+  console.log('Travel ', port);
 });
